@@ -20,7 +20,8 @@ const MAX_COMBO_COUNT = 3
 var combo_count := 0
 
 var attack_current := {}
-var combo := [{
+var combo := [
+	{
 		"damage": 1,
 		"animation": "attack_fast",
 		"effect": null,

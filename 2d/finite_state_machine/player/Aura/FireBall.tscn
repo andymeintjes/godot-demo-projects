@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://ceg3wvdyaxped"]
+
+[ext_resource type="Script" path="res://player/Aura/fire_ball.gd" id="1_2fj00"]
+[ext_resource type="Texture2D" uid="uid://b3t5johgi7qya" path="res://player/Aura/FireBall.png" id="1_jppcv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_iw7b8"]
+radius = 39.49
+
+[node name="FireBall" type="CharacterBody2D"]
+script = ExtResource("1_2fj00")
+
+[node name="Pivot" type="Marker2D" parent="."]
+position = Vector2(200, 0)
+rotation = 0.191986
+
+[node name="Sprite2D" type="Sprite2D" parent="Pivot"]
+position = Vector2(-60, 8)
+rotation = -3.14159
+texture = ExtResource("1_jppcv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+light_mask = 0
+visibility_layer = 0
+shape = SubResource("CircleShape2D_iw7b8")

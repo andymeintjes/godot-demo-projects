@@ -230,6 +230,7 @@ _data = {
 }
 
 [node name="Sword" type="Area2D"]
+rotation = 1.5708
 collision_layer = 16
 collision_mask = 3
 input_pickable = false

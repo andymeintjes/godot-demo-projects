@@ -1,19 +1,23 @@
-[gd_scene load_steps=19 format=3 uid="uid://bpdyvy2681m3i"]
+[gd_scene load_steps=23 format=3 uid="uid://bpdyvy2681m3i"]
 
 [ext_resource type="Script" path="res://player/player_controller.gd" id="1"]
 [ext_resource type="Script" path="res://player/player_state_machine.gd" id="2"]
 [ext_resource type="Script" path="res://player/states/motion/on_ground/idle.gd" id="3"]
 [ext_resource type="Script" path="res://player/states/motion/on_ground/move.gd" id="4"]
 [ext_resource type="Script" path="res://player/states/motion/in_air/jump.gd" id="5"]
+[ext_resource type="Script" path="res://player/states/motion/on_ground/slide.gd" id="5_af0di"]
 [ext_resource type="Script" path="res://player/states/combat/stagger.gd" id="6"]
 [ext_resource type="Script" path="res://player/states/combat/attack.gd" id="7"]
 [ext_resource type="Script" path="res://player/states/die.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://eds33w28pilu" path="res://player/shadow.png" id="9"]
 [ext_resource type="Texture2D" uid="uid://ds53oxkqrcumd" path="res://player/body.png" id="10"]
+[ext_resource type="Script" path="res://player/power_up.gd" id="10_1jo8r"]
 [ext_resource type="Script" path="res://player/bullet/bullet_spawner.gd" id="11"]
 [ext_resource type="Script" path="res://player/weapon/weapon_pivot.gd" id="12"]
 [ext_resource type="PackedScene" uid="uid://cdacdp11r3jua" path="res://player/weapon/Sword.tscn" id="13"]
 [ext_resource type="Script" path="res://player/states/debug/state_name_displayer.gd" id="15"]
+[ext_resource type="PackedScene" uid="uid://c6732cmureamh" path="res://player/Aura/PowerUpAura.tscn" id="15_bu5wt"]
+[ext_resource type="Script" path="res://player/Aura/fireball_spawner.gd" id="17_uy65j"]
 
 [sub_resource type="Animation" id="1"]
 
@@ -53,6 +57,9 @@ script = ExtResource("3")
 [node name="Move" type="Node" parent="StateMachine"]
 script = ExtResource("4")
 
+[node name="Slide" type="Node" parent="StateMachine"]
+script = ExtResource("5_af0di")
+
 [node name="Jump" type="Node" parent="StateMachine"]
 script = ExtResource("5")
 
@@ -64,6 +71,9 @@ script = ExtResource("7")
 
 [node name="Die" type="Node" parent="StateMachine"]
 script = ExtResource("8")
+
+[node name="PowerUp" type="Node" parent="StateMachine"]
+script = ExtResource("10_1jo8r")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -98,10 +108,20 @@ position = Vector2(110, 0)
 
 [node name="Sword" parent="BodyPivot/WeaponPivot/Offset" instance=ExtResource("13")]
 
+[node name="PowerUpAura" parent="BodyPivot" instance=ExtResource("15_bu5wt")]
+z_index = -1
+position = Vector2(0, -100)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("17_uy65j")
+
+[node name="CooldownTimer" type="Timer" parent="BodyPivot/PowerUpAura"]
+one_shot = true
+
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-20, 0, -20, -20, 20, -20, 20, 0)
 
 [node name="StateNameDisplayer" type="Label" parent="."]
+visible = false
 offset_left = -109.0
 offset_top = -180.0
 offset_right = 110.0
@@ -116,5 +136,6 @@ script = ExtResource("15")
 
 [connection signal="state_changed" from="StateMachine" to="BodyPivot/WeaponPivot/Offset/Sword" method="_on_StateMachine_state_changed"]
 [connection signal="state_changed" from="StateMachine" to="StateNameDisplayer" method="_on_StateMachine_state_changed"]
+[connection signal="finished" from="StateMachine/PowerUp" to="BodyPivot/PowerUpAura" method="_on_power_up_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="StateMachine" method="_on_animation_finished"]
 [connection signal="attack_finished" from="BodyPivot/WeaponPivot/Offset/Sword" to="StateMachine/Attack" method="_on_Sword_attack_finished"]
